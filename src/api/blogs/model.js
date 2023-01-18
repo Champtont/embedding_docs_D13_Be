@@ -15,7 +15,7 @@ const blogsSchema = new Schema(
       name: { type: String },
       avatar: { type: String },
     },
-    comments: { type: String },
+    comments: [{ comment: { type: String }, commentDate: { type: String } }],
   },
   {
     timestamps: true,

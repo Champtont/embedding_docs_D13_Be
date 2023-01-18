@@ -18,7 +18,7 @@ blogsRouter.post("/", async (req, res, next) => {
 blogsRouter.get("/", async (req, res, next) => {
   try {
     const mongoQuery = q2m(req.query);
-    const total = await BooksModel.countDocuments(mongoQuery.criteria);
+    const total = await BlogsModel.countDocuments(mongoQuery.criteria);
 
     const blogs = await BlogsModel.find(
       mongoQuery.criteria,
@@ -92,20 +92,22 @@ blogsRouter.delete("/:blogId", async (req, res, next) => {
 
 blogsRouter.post("/:blogId/comments", async (req, res, next) => {
   try {
-    const blogComment = await BlogsModel.findById(req.body.blogId, { _id: 0 });
+    const blogComment = req.body;
+    console.log(req.body);
     if (blogComment) {
       const commentToInsert = {
-        ...blogComment.toObject(),
+        ...blogComment,
         commentDate: new Date(),
       };
+      console.log(commentToInsert);
       const updatedBlog = await BlogsModel.findByIdAndUpdate(
         req.params.blogId,
         { $push: { comments: commentToInsert } },
         { new: true, runValidators: true }
       );
-
       if (updatedBlog) {
         res.send(updatedBlog);
+        console.log(updatedBlog);
       } else {
         next(
           createHttpError(404, `Blog with id ${req.params.blogId} not found!`)

@@ -7,6 +7,7 @@ export const badRequestHandler = (err, req, res, next) => {
     res
       .status(400)
       .send({ message: "You've sent a wrong _id in request params" });
+    console.log(err);
   } else {
     next(err);
   }
